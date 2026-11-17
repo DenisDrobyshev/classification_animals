@@ -1,83 +1,49 @@
+# Классификатор животных
 
-# 🐾 Классификатор животных
+Сравнение трёх нейросетей для классификации изображений животных на пять классов: кошка, собака, слон, лошадь, лев. Лучшая модель доступна через Streamlit и FastAPI.
 
-[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
-[![Keras](https://img.shields.io/badge/Keras-D00000?logo=keras&logoColor=white)]()
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+![Интерфейс классификатора](image.png)
 
-Сравнительный анализ моделей глубокого обучения для классификации изображений животных (кошка, собака, слон, лошадь, лев).
+## Результаты
 
-![alt text](image.png)
-
-## 📊 Сравнение моделей
-
-| Модель | Accuracy | Precision | Recall | F1-Score |
-|--------|----------|-----------|--------|----------|
+| Модель | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|
 | Dense | 0.70 | 0.70 | 0.70 | 0.70 |
 | SimpleCNN | 0.87 | 0.87 | 0.87 | 0.87 |
-| **VGGCNN** | **0.88** | **0.88** | **0.88** | **0.88** |
+| VGGCNN | 0.88 | 0.88 | 0.88 | 0.88 |
 
-**Лучшая модель:** VGGCNN (VGG-подобная сверточная сеть)
+Лучший результат у VGG-подобной сети. Полносвязная сеть заметно отстаёт от свёрточных.
 
-## 📁 Структура проекта
+## Модели
 
-```
-├── best_classification_model.h5   # Обученная модель
-├── model_config.pkl               # Конфигурация (классы, размер)
-├── app.py                         # Streamlit-приложение
-├── requirements.txt               # Зависимости
-├── Практическая_работа_№10.ipynb # Ноутбук с анализом
-└── README.md                      # Документация
-```
+1. Dense: полносвязная сеть 1024 → 512 → 256 → 5.
+2. SimpleCNN: три блока Conv2D и MaxPooling.
+3. VGGCNN: четыре блока в стиле VGG, до 512 фильтров.
 
-## 🚀 Локальный запуск
+## Данные
 
-### Установка
+Пять классов, около 2700 изображений на класс для обучения и около 300 для валидации.
+
+## Файлы
+
+- `app.py`: приложение на Streamlit, загружает модель локально.
+- `main.py`: API на FastAPI.
+- `streamlit_app.py`: Streamlit-клиент, который отправляет изображение в API.
+- `model_config.pkl`: список классов и размер входного изображения.
+- `requirements.txt`, `packages.txt`, `runtime.txt`: зависимости и версия Python для деплоя.
+
+Веса модели `best_classification_model.h5` в репозиторий не входят из-за размера. Чтобы запустить приложение, файл нужно положить рядом с `app.py`.
+
+## Запуск
 
 ```bash
 git clone https://github.com/DenisDrobyshev/classification_animals.git
 cd classification_animals
 pip install -r requirements.txt
+streamlit run app.py          # интерфейс, http://localhost:8501
+uvicorn main:app --reload     # API, http://localhost:8000
 ```
 
-### Запуск Streamlit
+## Лицензия
 
-```bash
-streamlit run app.py
-```
-
-### Запуск API (FastAPI)
-
-```bash
-uvicorn main:app --reload
-```
-
-## 📝 Описание датасета
-
-Датасет содержит изображения 5 классов животных:
-- Cat (кошка)
-- Dog (собака)  
-- Elephant (слон)
-- Horse (лошадь)
-- Lion (лев)
-
-Каждый класс содержит ~2700 изображений для обучения и ~300 для валидации.
-
-## 🧠 Архитектуры моделей
-
-1. **Dense** — полносвязная нейронная сеть (1024→512→256→5)
-2. **SimpleCNN** — сверточная сеть (3 блока Conv2D + MaxPooling)
-3. **VGGCNN** — VGG-подобная архитектура (4 блока, до 512 фильтров)
-
-## 📈 Результаты
-
-VGGCNN показала наилучшие результаты по всем метрикам. Полносвязная модель значительно уступает сверточным, что ожидаемо для задачи классификации изображений.
-
-## 🔗 Ссылки
-
-- **Репозиторий:** https://github.com/DenisDrobyshev/classification_animals
-- **API (локально):** http://localhost:8000
-- **Streamlit (локально):** http://localhost:8501
-
+MIT, см. [LICENSE](LICENSE).
